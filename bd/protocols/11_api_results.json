@@ -1,0 +1,389 @@
+[
+ [
+  "A01",
+  "Перевірка з'єднання",
+  "GET /health",
+  200,
+  200,
+  "PASS",
+  "{\"current_user\": \"edu_api\", \"current_database\": \"elearn_db\", \"version\": \"PostgreSQL 18.3 on x86_64-windows, compiled by msvc-19.44.35223, 64-bit\"}"
+ ],
+ [
+  "A02",
+  "Список опублікованих курсів",
+  "GET /courses?status=published",
+  200,
+  200,
+  "PASS",
+  "4 записів"
+ ],
+ [
+  "A03",
+  "Створення курсу (CREATE)",
+  "POST /courses",
+  201,
+  201,
+  "PASS",
+  "{\"code\": \"OPS-210\", \"title\": \"Основи DevOps\", \"description\": null}"
+ ],
+ [
+  "A04",
+  "Читання курсу (READ)",
+  "GET /courses/7",
+  200,
+  200,
+  "PASS",
+  "{\"code\": \"OPS-210\", \"title\": \"Основи DevOps\", \"description\": null}"
+ ],
+ [
+  "A05",
+  "Часткове оновлення (PATCH) — публікація",
+  "PATCH /courses/7",
+  200,
+  200,
+  "PASS",
+  "{\"code\": \"OPS-210\", \"title\": \"Основи DevOps\", \"description\": null}"
+ ],
+ [
+  "A06",
+  "Повна заміна (PUT)",
+  "PUT /courses/7",
+  200,
+  200,
+  "PASS",
+  "{\"code\": \"OPS-210\", \"title\": \"Основи DevOps і CI/CD\", \"description\": null}"
+ ],
+ [
+  "A07",
+  "Дублікат коду курсу",
+  "POST /courses",
+  409,
+  409,
+  "PASS",
+  "unique_violation: повторювані значення ключа порушують обмеження унікальності \"courses_code_key\""
+ ],
+ [
+  "A08",
+  "Дата завершення раніше початку",
+  "POST /courses",
+  422,
+  422,
+  "PASS",
+  "check_violation: новий рядок для відношення \"courses\" порушує перевірне обмеження перевірку \"courses_dates_chk\""
+ ],
+ [
+  "A09",
+  "Викладач курсу — студент (тригер)",
+  "POST /courses",
+  422,
+  422,
+  "PASS",
+  "check_violation: Користувач 6 не є викладачем"
+ ],
+ [
+  "A10",
+  "Невалідний код (валідація Pydantic)",
+  "POST /courses",
+  422,
+  422,
+  "PASS",
+  "{\"detail\": [{\"type\": \"string_pattern_mismatch\", \"loc\": [\"body\", \"code\"], \"msg\": \"String should match pattern '^[A-Z]{2,6}-[0-9]{3}$'\", \"input\": \"bad\", \"ctx\": {\"pattern\": \"^[A-Z]{2,6}-[0-9]{3}$\"}}]}"
+ ],
+ [
+  "A11",
+  "Створення модуля",
+  "POST /modules",
+  201,
+  201,
+  "PASS",
+  "{\"course_id\": 7, \"title\": \"Контейнери\", \"position\": 1}"
+ ],
+ [
+  "A12",
+  "Створення матеріалу",
+  "POST /materials",
+  201,
+  201,
+  "PASS",
+  "{\"module_id\": 12, \"title\": \"Docker docs\", \"material_type\": \"link\"}"
+ ],
+ [
+  "A13",
+  "Створення завдання",
+  "POST /assignments",
+  201,
+  201,
+  "PASS",
+  "{\"module_id\": 12, \"title\": \"Dockerfile\", \"description\": null}"
+ ],
+ [
+  "A14",
+  "Запис студента (процедура enroll_student)",
+  "POST /enrollments",
+  201,
+  201,
+  "PASS",
+  "{\"course_id\": 7, \"student_id\": 16, \"id\": 35}"
+ ],
+ [
+  "A15",
+  "Повторний запис",
+  "POST /enrollments",
+  409,
+  409,
+  "PASS",
+  "unique_violation: повторювані значення ключа порушують обмеження унікальності \"enrollments_course_student_uq\""
+ ],
+ [
+  "A16",
+  "Другий студент (останнє місце)",
+  "POST /enrollments",
+  201,
+  201,
+  "PASS",
+  "{\"course_id\": 7, \"student_id\": 17, \"id\": 37}"
+ ],
+ [
+  "A17",
+  "Запис понад ліміт місць",
+  "POST /enrollments",
+  422,
+  422,
+  "PASS",
+  "check_violation: На курсі 7 немає вільних місць (2 з 2)"
+ ],
+ [
+  "A18",
+  "Здача роботи (тригер attempt_no, is_late)",
+  "POST /submissions",
+  201,
+  201,
+  "PASS",
+  "{\"id\": 59, \"assignment_id\": 11, \"enrollment_id\": 35}"
+ ],
+ [
+  "A19",
+  "Робота з чужого курсу",
+  "POST /submissions",
+  422,
+  422,
+  "PASS",
+  "check_violation: Завдання 1 не належить курсу запису 35"
+ ],
+ [
+  "A20",
+  "Оцінка понад max_score",
+  "POST /grades",
+  422,
+  422,
+  "PASS",
+  "check_violation: Бал 11.00 перевищує максимальний 10.00"
+ ],
+ [
+  "A21",
+  "Оцінювання (процедура grade_submission)",
+  "POST /grades",
+  201,
+  201,
+  "PASS",
+  "{\"submission_id\": 59, \"grader_id\": 4, \"score\": \"9.00\"}"
+ ],
+ [
+  "A22",
+  "Статус роботи змінив тригер",
+  "GET /submissions/59",
+  200,
+  200,
+  "PASS",
+  "{\"id\": 59, \"assignment_id\": 11, \"enrollment_id\": 35}"
+ ],
+ [
+  "A23",
+  "Перегляд матеріалу (UPSERT)",
+  "POST /material-progress",
+  201,
+  201,
+  "PASS",
+  "{\"enrollment_id\": 35, \"material_id\": 23, \"first_viewed_at\": \"2026-11-22T18:08:22.485290+02:00\"}"
+ ],
+ [
+  "A24",
+  "Повторний перегляд (views_count + 1)",
+  "POST /material-progress",
+  201,
+  201,
+  "PASS",
+  "{\"enrollment_id\": 35, \"material_id\": 23, \"first_viewed_at\": \"2026-11-22T18:08:22.485290+02:00\"}"
+ ],
+ [
+  "A25",
+  "Прогрес студента (функції)",
+  "GET /enrollments/35/progress",
+  200,
+  200,
+  "PASS",
+  "{\"enrollment_id\": 35, \"course_id\": 7, \"student_id\": 16}"
+ ],
+ [
+  "A26",
+  "Звіт по курсу (fn_course_report)",
+  "GET /courses/7/report",
+  200,
+  200,
+  "PASS",
+  "2 записів"
+ ],
+ [
+  "A27",
+  "Структура курсу",
+  "GET /courses/7/structure",
+  200,
+  200,
+  "PASS",
+  "{\"id\": 7, \"code\": \"OPS-210\", \"title\": \"Основи DevOps і CI/CD\"}"
+ ],
+ [
+  "A28",
+  "Завершення навчання (complete_enrollment)",
+  "POST /enrollments/35/complete",
+  200,
+  200,
+  "PASS",
+  "{\"course_id\": 7, \"student_id\": 16, \"id\": 35}"
+ ],
+ [
+  "A29",
+  "Видалення курсу з записами (RESTRICT)",
+  "DELETE /courses/7",
+  409,
+  409,
+  "PASS",
+  "restrict_violation: оновлення або видалення в таблиці \"courses\" порушує налаштування RESTRICT зовнішнього ключа \"enrollments_course_id_fkey\" в таблиці \"enrollments\""
+ ],
+ [
+  "A30",
+  "Журнал аудиту",
+  "GET /reports/audit-log?table_name=grades&limit=3",
+  200,
+  200,
+  "PASS",
+  "3 записів"
+ ],
+ [
+  "A31",
+  "Огляд курсів (представлення)",
+  "GET /reports/course-overview?status=published",
+  200,
+  200,
+  "PASS",
+  "5 записів"
+ ],
+ [
+  "A32",
+  "Статистика з оновленням MV",
+  "GET /reports/course-stats?refresh=true",
+  200,
+  200,
+  "PASS",
+  "7 записів"
+ ],
+ [
+  "A33",
+  "Рейтинг студентів (RANK)",
+  "GET /reports/top-students?course_id=1&limit=3",
+  200,
+  200,
+  "PASS",
+  "3 записів"
+ ],
+ [
+  "A34",
+  "Дерево категорій (рекурсивний CTE)",
+  "GET /categories/tree",
+  200,
+  200,
+  "PASS",
+  "8 записів"
+ ],
+ [
+  "A35",
+  "Неіснуючий курс",
+  "GET /courses/9999",
+  404,
+  404,
+  "PASS",
+  "course 9999 не знайдено"
+ ],
+ [
+  "A36",
+  "Звіт неіснуючого курсу",
+  "GET /courses/9999/report",
+  404,
+  404,
+  "PASS",
+  "no_data_found: Курс 9999 не знайдено"
+ ],
+ [
+  "A37",
+  "DELETE оцінки",
+  "DELETE /grades/53",
+  204,
+  204,
+  "PASS",
+  ""
+ ],
+ [
+  "A38",
+  "DELETE роботи",
+  "DELETE /submissions/59",
+  204,
+  204,
+  "PASS",
+  ""
+ ],
+ [
+  "A39",
+  "DELETE перегляду",
+  "DELETE /material-progress/35/23",
+  204,
+  204,
+  "PASS",
+  ""
+ ],
+ [
+  "A40",
+  "DELETE записів на курс",
+  "DELETE /enrollments/35",
+  204,
+  204,
+  "PASS",
+  ""
+ ],
+ [
+  "A41",
+  "DELETE завдання",
+  "DELETE /assignments/11",
+  204,
+  204,
+  "PASS",
+  ""
+ ],
+ [
+  "A42",
+  "DELETE курсу (каскадно модулі й матеріали)",
+  "DELETE /courses/7",
+  204,
+  204,
+  "PASS",
+  ""
+ ],
+ [
+  "A43",
+  "Курс видалено",
+  "GET /courses/7",
+  404,
+  404,
+  "PASS",
+  "course 7 не знайдено"
+ ]
+]

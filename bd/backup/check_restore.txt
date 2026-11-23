@@ -1,0 +1,19 @@
+tables|11
+views|3
+matviews|1
+indexes|26
+functions+procedures|14
+triggers|7
+constraints|125
+rows users|21
+rows courses|6
+rows enrollments|34
+rows submissions|58
+rows grades|51
+rows material_progress|127
+rows audit_log|52
+sum(grades.score)|577.00
+md5(submissions)|c421a9484fd180ab691a3f9a07fc3b40
+fn_course_report(4) sum score|205.00
+mv_course_stats rows|6
+grants edu_analyst|4

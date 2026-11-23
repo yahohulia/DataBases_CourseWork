@@ -1,0 +1,22 @@
+PostgreSQL 18.3; рівень ізоляції за замовчуванням: read committed
+
+=== К1. Запис двох студентів на останнє місце курсу STAT-110 ===
+[  0.19 s] setup    зайнято 7 місць, max_students = 8 -> вільне 1 місце
+[  0.48 s] sess_A   BEGIN; CALL edu.enroll_student(4, 9)  -- студент id 9
+[  0.50 s] sess_A   процедура виконана, enrollment_id = 40; транзакція відкрита
+[  0.50 s] sess_B   BEGIN; CALL edu.enroll_student(4, 8)  -- студент id 8
+[  2.01 s] monitor  sess_B очікує: wait_event_type=Lock, wait_event=transactionid
+[  3.01 s] sess_A   COMMIT
+[  3.02 s] sess_B   результат: ERROR 23514: ПОМИЛКА:  На курсі 4 немає вільних місць (8 з 8)
+[  3.02 s] check    записів на курс: 8, ліміт: 8 -> перевищення немає: True
+[  3.03 s] cleanup  тестові записи видалено, max_students = 15
+
+=== К2. SELECT ... FOR UPDATE і lock_timeout у другому сеансі ===
+[  3.34 s] sess_A   BEGIN; SELECT id, max_students FROM edu.courses WHERE id = 1 FOR UPDATE
+[  3.35 s] sess_A   рядок заблоковано: (1, 25)
+[  3.35 s] sess_B   BEGIN; SET LOCAL lock_timeout = '2s'; UPDATE edu.courses SET max_students = max_students + 1 WHERE id = 1
+[  5.37 s] sess_B   через 2.02 с: ERROR 55P03: ПОМИЛКА:  виконання оператора скасовано через тайм-аут блокування
+[  5.37 s] sess_B   ROLLBACK
+[  5.37 s] sess_A   ROLLBACK -> блокування знято
+[  5.37 s] sess_B   повторний UPDATE виконано без очікування, max_students = 26
+[  5.37 s] sess_B   ROLLBACK -> початкові дані збережено

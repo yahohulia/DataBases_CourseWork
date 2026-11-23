@@ -1,0 +1,277 @@
+{
+  "schema_version": 1,
+  "brief_id": "kr-bd-elearn-113",
+  "mode": "auto",
+  "language": "uk",
+  "title": "База даних платформи дистанційного навчання",
+  "audience": "Комісія із захисту курсової роботи з дисципліни «Бази даних»",
+  "desired_action": "Оцінити курсову роботу: база даних, API та звіт готові до перевірки",
+  "deck": {
+    "deck_type": "user-content",
+    "page_count": 10,
+    "output_format": "html-slides"
+  },
+  "style": {
+    "preset": "Enterprise Dark",
+    "tone": "технічний, доказовий, стриманий",
+    "visual_density": "medium"
+  },
+  "content": {
+    "source_policy": "distill-only",
+    "must_include": [
+      "предметна область варіанта 113",
+      "структура з 11 таблиць",
+      "тригери, функції та процедури",
+      "ролі та права доступу",
+      "паралельний доступ",
+      "індекси та EXPLAIN ANALYZE",
+      "резервне копіювання",
+      "REST API зі Swagger",
+      "результати тестів"
+    ],
+    "must_avoid": [
+      "паролі та облікові дані",
+      "вигадані вимірювання"
+    ]
+  },
+  "narrative": {
+    "thesis": "Цілісність даних платформи навчання забезпечує сама СУБД PostgreSQL: обмеження, тригери, процедури й ролі. API лише передає запити до неї.",
+    "page_roles": [
+      "cover",
+      "problem",
+      "structure",
+      "integrity",
+      "logic",
+      "security",
+      "concurrency",
+      "performance",
+      "api",
+      "closing"
+    ],
+    "slides": [
+      {
+        "slide_number": 1,
+        "role": "cover",
+        "title": "Платформа дистанційного навчання",
+        "title_emphasis": "навчання",
+        "key_point": "Курсова робота з дисципліни «Бази даних», варіант 113",
+        "claim": "Курси, учасники, навчальні матеріали, завдання та результати виконання в одній базі даних PostgreSQL 18.",
+        "explanation": "Курсова робота з дисципліни «Бази даних». Виконав Гогуля Ярослав Сергійович.",
+        "visual": "hero statement",
+        "preferred_layout_family": "hero",
+        "chart_policy": "avoid",
+        "supporting_facts": [
+          "Варіант 113, PostgreSQL 18.3, схема edu",
+          "REST API на FastAPI зі Swagger UI"
+        ],
+        "speaker_note": "Представитися, назвати тему й варіант. Сказати, що робота має три частини: база даних, API, звіт."
+      },
+      {
+        "slide_number": 2,
+        "role": "problem",
+        "title": "Правила навчання живуть у базі",
+        "key_point": "Бізнес-правила перевіряє СУБД, а не тільки застосунок",
+        "claim": "Якщо правило перевіряє лише застосунок, будь-який інший клієнт може його обійти.",
+        "explanation": "Тому ліміт місць, кількість спроб, допустимий бал і переходи статусів курсу перевіряє PostgreSQL. Опис предметної області містить 17 бізнес-правил (BR01–BR17).",
+        "visual": "rule cards",
+        "preferred_layout_family": "evidence",
+        "chart_policy": "avoid",
+        "supporting_facts": [
+          "Студент не може записатися на курс без вільних місць",
+          "Кількість спроб здачі завдання обмежена",
+          "Статус курсу змінюється лише так: draft → published → archived"
+        ],
+        "speaker_note": "Пояснити мотивацію: чому логіку винесено в базу даних."
+      },
+      {
+        "slide_number": 3,
+        "role": "structure",
+        "title": "11 таблиць у третій нормальній формі",
+        "title_emphasis": "11 таблиць",
+        "key_point": "Схема edu описує весь навчальний цикл",
+        "claim": "Від каталогу курсів до оцінки та журналу аудиту.",
+        "explanation": "Каталог: categories, courses, modules, materials. Учасники: users, enrollments. Навчання: assignments, submissions, grades, material_progress. Контроль: audit_log.",
+        "visual": "grouped table list",
+        "preferred_layout_family": "architecture",
+        "chart_policy": "auto",
+        "supporting_facts": [
+          "Демонстраційні дані: 21 користувач, 6 курсів, 34 записи на курси",
+          "58 здач завдань, 51 оцінка, 127 записів прогресу",
+          "Категорії утворюють дерево; його обходить рекурсивний CTE"
+        ],
+        "numeric_facts": [
+          "таблиць: 11",
+          "користувачів: 21",
+          "здач завдань: 58"
+        ],
+        "speaker_note": "Показати ER-діаграму зі звіту, якщо комісія попросить деталі."
+      },
+      {
+        "slide_number": 4,
+        "role": "integrity",
+        "title": "Помилки зупиняє сама СУБД",
+        "key_point": "CHECK, UNIQUE і FOREIGN KEY відхиляють некоректні дані до запису",
+        "claim": "Кожна помилка має свій SQLSTATE, і API перетворює його на зрозумілий HTTP-статус.",
+        "explanation": "Формат email і коду курсу перевіряють регулярні вирази в CHECK. Видалення курсу із записами блокує ON DELETE RESTRICT.",
+        "visual": "error code mapping",
+        "preferred_layout_family": "comparison",
+        "chart_policy": "avoid",
+        "supporting_facts": [
+          "23505 unique_violation → HTTP 409",
+          "23514 check_violation → HTTP 422",
+          "23001 restrict_violation → HTTP 409"
+        ],
+        "speaker_note": "Зазначити, що в PostgreSQL 18 ON DELETE RESTRICT повертає 23001."
+      },
+      {
+        "slide_number": 5,
+        "role": "logic",
+        "title": "7 тригерів і 3 процедури",
+        "title_emphasis": "7 тригерів",
+        "key_point": "Серверна логіка на PL/pgSQL виконує складні правила",
+        "claim": "Тригер на submissions сам нумерує спроби, позначає запізнення та блокує запис студента FOR UPDATE.",
+        "explanation": "Процедура enroll_student блокує рядок курсу й перевіряє вільні місця. Процедура grade_submission виставляє оцінку через upsert. Зміни оцінок і статусів курсу пишуться в audit_log.",
+        "visual": "flow of procedures",
+        "preferred_layout_family": "flow",
+        "chart_policy": "avoid",
+        "supporting_facts": [
+          "7 тригерів, 3 функції, 3 процедури",
+          "4 представлення, одне з них матеріалізоване (mv_course_stats)",
+          "17 аналітичних запитів: віконні функції, рекурсивний CTE, DISTINCT ON"
+        ],
+        "numeric_facts": [
+          "тригерів: 7",
+          "SQL-тестів пройдено: 28"
+        ],
+        "speaker_note": "Коротко пройти шлях: запис на курс → здача → оцінка → аудит."
+      },
+      {
+        "slide_number": 6,
+        "role": "security",
+        "title": "Чотири ролі з мінімальними правами",
+        "key_point": "Кожна роль отримує лише потрібні їй GRANT",
+        "claim": "Журнал аудиту не може змінити жодна роль застосунку.",
+        "explanation": "Групові ролі не мають права входу. API працює від окремої ролі edu_api, яка може лише читати audit_log. Тригери аудиту виконуються як SECURITY DEFINER із фіксованим search_path.",
+        "visual": "role cards",
+        "preferred_layout_family": "comparison",
+        "chart_policy": "avoid",
+        "supporting_facts": [
+          "edu_teacher — керує курсами та оцінює роботи",
+          "edu_student — читає матеріали та здає роботи",
+          "edu_analyst — лише читає представлення та звіти"
+        ],
+        "speaker_note": "Пояснити, навіщо SECURITY DEFINER і чому фіксується search_path."
+      },
+      {
+        "slide_number": 7,
+        "role": "concurrency",
+        "title": "Останнє місце — одному студенту",
+        "key_point": "Блокування рядка курсу усуває гонку при записі",
+        "claim": "Два сеанси одночасно записували студентів на останнє вільне місце курсу STAT-110.",
+        "explanation": "Ізоляція READ COMMITTED, рядок курсу блокує SELECT … FOR UPDATE. Після COMMIT першого сеансу другий отримав помилку 23514: 8 записів при ліміті 8.",
+        "visual": "two-session timeline",
+        "preferred_layout_family": "timeline",
+        "chart_policy": "avoid",
+        "supporting_facts": [
+          "К1: сеанс B чекав ≈ 2,5 с і отримав 23514",
+          "К2: lock_timeout 2 с → помилка 55P03 через 2,02 с",
+          "API повертає 55P03 як HTTP 423 Locked"
+        ],
+        "numeric_facts": [
+          "записів / ліміт: 8 / 8",
+          "lock_timeout, с: 2"
+        ],
+        "speaker_note": "Сценарій відтворює sql/08_concurrency.py, протокол — у додатку."
+      },
+      {
+        "slide_number": 8,
+        "role": "performance",
+        "title": "Індекс прискорив запит у 15 разів",
+        "title_emphasis": "у 15 разів",
+        "key_point": "EXPLAIN ANALYZE на 136 000 здачах до і після індексу",
+        "claim": "Складений покривний індекс замінив Seq Scan на Index Only Scan.",
+        "explanation": "Вимірювання проведено в окремій базі elearn_perf. Час — медіана повторних запусків.",
+        "visual": "before / after stat",
+        "preferred_layout_family": "evidence",
+        "chart_policy": "auto",
+        "supporting_facts": [
+          "P1: медіана 0,48 → 0,021 мс; буфери 915 → 7",
+          "P2: медіана 9,837 → 0,643 мс; буфери 1948 → 17",
+          "P2: Seq Scan → Index Only Scan після VACUUM",
+          "Обсяг тестових даних: 136 000 здач завдань"
+        ],
+        "numeric_facts": [
+          "P2 до, мс: 9,837",
+          "P2 після, мс: 0,643"
+        ],
+        "speaker_note": "9,837 / 0,643 ≈ 15,3 раза. Для P1 прискорення приблизно у 23 рази."
+      },
+      {
+        "slide_number": 9,
+        "role": "api",
+        "title": "66 операцій у Swagger UI",
+        "title_emphasis": "66 операцій",
+        "key_point": "FastAPI надає CRUD для всіх сутностей і окремі бізнес-ендпоїнти",
+        "claim": "Swagger UI на /docs дозволяє виконати кожну операцію з браузера.",
+        "explanation": "Запис на курс, завершення навчання та виставлення оцінки викликають процедури бази даних. Звіти читають представлення та матеріалізоване представлення.",
+        "visual": "endpoint groups",
+        "preferred_layout_family": "evidence",
+        "chart_policy": "avoid",
+        "supporting_facts": [
+          "32 шляхи, 66 HTTP-операцій",
+          "CRUD для 10 сутностей через спільну фабрику маршрутів",
+          "43 сценарії API-тестування: 43 PASS, 0 FAIL"
+        ],
+        "numeric_facts": [
+          "HTTP-операцій: 66",
+          "API-тестів PASS: 43"
+        ],
+        "speaker_note": "За можливості показати Swagger наживо: GET /courses/{id}/report і помилку 404."
+      },
+      {
+        "slide_number": 10,
+        "role": "closing",
+        "title": "Усі перевірки пройдено",
+        "key_point": "28 SQL-тестів, 43 API-тести, 19 показників відновлення",
+        "claim": "База даних, API й звіт відтворюються з репозиторію одним скриптом run_all.sh.",
+        "explanation": "Можливий розвиток: секціонування submissions за часом і повнотекстовий пошук матеріалів.",
+        "visual": "closing statement",
+        "preferred_layout_family": "close",
+        "chart_policy": "avoid",
+        "supporting_facts": [
+          "28 / 28 SQL-тестів",
+          "43 / 43 API-сценаріїв",
+          "19 / 19 показників після відновлення"
+        ],
+        "speaker_note": "Подякувати й перейти до запитань."
+      }
+    ]
+  },
+  "runtime": {
+    "editing_mode": true,
+    "presenter_mode": true,
+    "watermark_mode": "injected-last-slide",
+    "export_intent": "none"
+  },
+  "plan_view": {
+    "emit_planning_view": false,
+    "planning_view_path": "PLANNING.md"
+  },
+  "timing": {
+    "estimate": {
+      "plan": "not measured",
+      "generate": "not measured",
+      "validate": "not measured",
+      "polish": "not measured",
+      "total": "not measured"
+    },
+    "actual": {
+      "plan": "not measured",
+      "generate": "not measured",
+      "validate": "not measured",
+      "polish": "not measured",
+      "total": "not measured"
+    }
+  },
+  "notes": ""
+}

@@ -1,0 +1,28 @@
+== pg_dump pg_dump (PostgreSQL) 18.3
+файл дампу: backup/elearn_db.dump 80984 байт
+== pg_restore у порожню базу elearn_restore
+pg_restore завершено, код 0
+== Порівняння: показник | джерело | відновлена
+tables                         | 11                                 | 11                                 | збігається
+views                          | 3                                  | 3                                  | збігається
+matviews                       | 1                                  | 1                                  | збігається
+indexes                        | 26                                 | 26                                 | збігається
+functions+procedures           | 14                                 | 14                                 | збігається
+triggers                       | 7                                  | 7                                  | збігається
+constraints                    | 125                                | 125                                | збігається
+rows users                     | 21                                 | 21                                 | збігається
+rows courses                   | 6                                  | 6                                  | збігається
+rows enrollments               | 34                                 | 34                                 | збігається
+rows submissions               | 58                                 | 58                                 | збігається
+rows grades                    | 51                                 | 51                                 | збігається
+rows material_progress         | 127                                | 127                                | збігається
+rows audit_log                 | 52                                 | 52                                 | збігається
+sum(grades.score)              | 577.00                             | 577.00                             | збігається
+md5(submissions)               | c421a9484fd180ab691a3f9a07fc3b40   | c421a9484fd180ab691a3f9a07fc3b40   | збігається
+fn_course_report(4) sum score  | 205.00                             | 205.00                             | збігається
+mv_course_stats rows           | 6                                  | 6                                  | збігається
+grants edu_analyst             | 4                                  | 4                                  | збігається
+РЕЗУЛЬТАТ: усі контрольні показники збігаються
+== Перевірка обмежень у відновленій базі (очікується помилка unique_violation)
+ПОМИЛКА:  повторювані значення ключа порушують обмеження унікальності "users_email_uq"
+DETAIL:  Ключ (lower(email::text))=(st01@elearn.test) вже існує.

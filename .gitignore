@@ -1,0 +1,11 @@
+.env
+__pycache__/
+*.dump
+*.profile/
+presentation/fonts/
+presentation/presentation_ctx.json
+Методичні_рекомендації*.docx
+~$*
+report/*.docx
+report/*.pdf
+ЕПЗ_*.docx

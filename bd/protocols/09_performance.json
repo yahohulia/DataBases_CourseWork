@@ -1,0 +1,123 @@
+{
+  "P1": {
+    "title": "Останні 10 робіт запису на курс (enrollment_id = 7777)",
+    "sql": "SELECT id, assignment_id, attempt_no, submitted_at, status\n                  FROM edu.submissions\n                  WHERE enrollment_id = 7777\n                  ORDER BY submitted_at DESC\n                  LIMIT 10",
+    "index": "CREATE INDEX submissions_enrollment_time_idx ON edu.submissions (enrollment_id, submitted_at DESC)",
+    "index_size": "4216 kB",
+    "before": {
+      "plan": [
+        "Limit (rows=8.0, loops=1)",
+        "  Sort (rows=8.0, loops=1)",
+        "    Index Scan using submissions_attempt_uq (rows=8.0, loops=1)"
+      ],
+      "text_plan": "Limit (actual rows=8.00 loops=1)\n  Buffers: shared hit=915\n  ->  Sort (actual rows=8.00 loops=1)\n        Sort Key: submitted_at DESC\n        Sort Method: quicksort  Memory: 25kB\n        Buffers: shared hit=915\n        ->  Index Scan using submissions_attempt_uq on submissions (actual rows=8.00 loops=1)\n              Index Cond: (enrollment_id = 7777)\n              Index Searches: 302\n              Buffers: shared hit=915",
+      "first_ms": 0.527,
+      "median_ms": 0.48,
+      "min_ms": 0.326,
+      "max_ms": 0.499,
+      "shared_hit": 915,
+      "shared_read": 0,
+      "total_cost": 1080.89,
+      "rows": 8.0
+    },
+    "after": {
+      "plan": [
+        "Limit (rows=8.0, loops=1)",
+        "  Index Scan using submissions_enrollment_time_idx (rows=8.0, loops=1)"
+      ],
+      "text_plan": "Limit (actual rows=8.00 loops=1)\n  Buffers: shared hit=7\n  ->  Index Scan using submissions_enrollment_time_idx on submissions (actual rows=8.00 loops=1)\n        Index Cond: (enrollment_id = 7777)\n        Index Searches: 1\n        Buffers: shared hit=7",
+      "first_ms": 0.06,
+      "median_ms": 0.021,
+      "min_ms": 0.021,
+      "max_ms": 0.024,
+      "shared_hit": 7,
+      "shared_read": 0,
+      "total_cost": 23.63,
+      "rows": 8.0
+    }
+  },
+  "P2": {
+    "title": "Кількість робіт і запізнень за тиждень 10–17.10.2026 по завданнях",
+    "sql": "SELECT assignment_id, count(*) AS cnt,\n                         count(*) FILTER (WHERE is_late) AS late\n                  FROM edu.submissions\n                  WHERE submitted_at >= '2026-10-10 00:00+03'\n                    AND submitted_at <  '2026-10-17 00:00+03'\n                  GROUP BY assignment_id\n                  ORDER BY cnt DESC",
+    "index": "CREATE INDEX submissions_submitted_at_idx ON edu.submissions (submitted_at) INCLUDE (assignment_id, is_late)",
+    "index_size": "4216 kB",
+    "before": {
+      "plan": [
+        "Sort (rows=75.0, loops=1)",
+        "  Aggregate (rows=75.0, loops=1)",
+        "    Seq Scan on submissions (rows=3338.0, loops=1)"
+      ],
+      "text_plan": "Sort (actual rows=75.00 loops=1)\n  Sort Key: (count(*)) DESC\n  Sort Method: quicksort  Memory: 27kB\n  Buffers: shared hit=1948\n  ->  HashAggregate (actual rows=75.00 loops=1)\n        Group Key: assignment_id\n        Batches: 1  Memory Usage: 48kB\n        Buffers: shared hit=1948\n        ->  Seq Scan on submissions (actual rows=3338.00 loops=1)\n              Filter: ((submitted_at >= '2026-10-10 00:00:00+03'::timestamp with time zone) AND (submitted_at < '2026-10-17 00:00:00+03'::timestamp with time zone))\n              Rows Removed by Filter: 132662\n              Buffers: shared hit=1948",
+      "first_ms": 9.483,
+      "median_ms": 9.837,
+      "min_ms": 9.437,
+      "max_ms": 12.28,
+      "shared_hit": 1948,
+      "shared_read": 0,
+      "total_cost": 4029.35,
+      "rows": 75.0
+    },
+    "after": {
+      "plan": [
+        "Sort (rows=75.0, loops=1)",
+        "  Aggregate (rows=75.0, loops=1)",
+        "    Index Only Scan using submissions_submitted_at_idx (rows=3338.0, loops=1)"
+      ],
+      "text_plan": "Sort (actual rows=75.00 loops=1)\n  Sort Key: (count(*)) DESC\n  Sort Method: quicksort  Memory: 27kB\n  Buffers: shared hit=17\n  ->  HashAggregate (actual rows=75.00 loops=1)\n        Group Key: assignment_id\n        Batches: 1  Memory Usage: 48kB\n        Buffers: shared hit=17\n        ->  Index Only Scan using submissions_submitted_at_idx on submissions (actual rows=3338.00 loops=1)\n              Index Cond: ((submitted_at >= '2026-10-10 00:00:00+03'::timestamp with time zone) AND (submitted_at < '2026-10-17 00:00:00+03'::timestamp with time zone))\n              Heap Fetches: 0\n              Index Searches: 1\n              Buffers: shared hit=17",
+      "first_ms": 0.829,
+      "median_ms": 0.643,
+      "min_ms": 0.624,
+      "max_ms": 0.654,
+      "shared_hit": 17,
+      "shared_read": 0,
+      "total_cost": 167.72,
+      "rows": 75.0
+    }
+  },
+  "insert": {
+    "with": [
+      [
+        2000,
+        159.2
+      ],
+      [
+        2000,
+        770.1
+      ],
+      [
+        2000,
+        926.6
+      ],
+      [
+        2000,
+        966.7
+      ],
+      [
+        2000,
+        852.1
+      ]
+    ],
+    "without": [
+      [
+        2000,
+        891.7
+      ],
+      [
+        2000,
+        995.5
+      ],
+      [
+        2000,
+        832.8
+      ],
+      [
+        2000,
+        958.7
+      ],
+      [
+        2000,
+        850.3
+      ]
+    ]
+  }
+}

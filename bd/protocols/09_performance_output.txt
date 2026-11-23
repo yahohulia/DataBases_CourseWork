@@ -1,0 +1,54 @@
+PostgreSQL 18.3; submissions: 136000 рядків, 16 MB
+
+=== P1. Останні 10 робіт запису на курс (enrollment_id = 7777) ===
+Зміна: CREATE INDEX submissions_enrollment_time_idx ON edu.submissions (enrollment_id, submitted_at DESC)  (розмір індексу 4216 kB)
+--- До: перший 0.527 мс, медіана 5 повторів 0.48 мс (min 0.326, max 0.499), shared hit=915 read=0, cost=1080.89
+Limit (actual rows=8.00 loops=1)
+  Buffers: shared hit=915
+  ->  Sort (actual rows=8.00 loops=1)
+        Sort Key: submitted_at DESC
+        Sort Method: quicksort  Memory: 25kB
+        Buffers: shared hit=915
+        ->  Index Scan using submissions_attempt_uq on submissions (actual rows=8.00 loops=1)
+              Index Cond: (enrollment_id = 7777)
+              Index Searches: 302
+              Buffers: shared hit=915
+--- Після: перший 0.06 мс, медіана 5 повторів 0.021 мс (min 0.021, max 0.024), shared hit=7 read=0, cost=23.63
+Limit (actual rows=8.00 loops=1)
+  Buffers: shared hit=7
+  ->  Index Scan using submissions_enrollment_time_idx on submissions (actual rows=8.00 loops=1)
+        Index Cond: (enrollment_id = 7777)
+        Index Searches: 1
+        Buffers: shared hit=7
+
+=== P2. Кількість робіт і запізнень за тиждень 10–17.10.2026 по завданнях ===
+Зміна: CREATE INDEX submissions_submitted_at_idx ON edu.submissions (submitted_at) INCLUDE (assignment_id, is_late)  (розмір індексу 4216 kB)
+--- До: перший 9.483 мс, медіана 5 повторів 9.837 мс (min 9.437, max 12.28), shared hit=1948 read=0, cost=4029.35
+Sort (actual rows=75.00 loops=1)
+  Sort Key: (count(*)) DESC
+  Sort Method: quicksort  Memory: 27kB
+  Buffers: shared hit=1948
+  ->  HashAggregate (actual rows=75.00 loops=1)
+        Group Key: assignment_id
+        Batches: 1  Memory Usage: 48kB
+        Buffers: shared hit=1948
+        ->  Seq Scan on submissions (actual rows=3338.00 loops=1)
+              Filter: ((submitted_at >= '2026-10-10 00:00:00+03'::timestamp with time zone) AND (submitted_at < '2026-10-17 00:00:00+03'::timestamp with time zone))
+              Rows Removed by Filter: 132662
+              Buffers: shared hit=1948
+--- Після: перший 0.829 мс, медіана 5 повторів 0.643 мс (min 0.624, max 0.654), shared hit=17 read=0, cost=167.72
+Sort (actual rows=75.00 loops=1)
+  Sort Key: (count(*)) DESC
+  Sort Method: quicksort  Memory: 27kB
+  Buffers: shared hit=17
+  ->  HashAggregate (actual rows=75.00 loops=1)
+        Group Key: assignment_id
+        Batches: 1  Memory Usage: 48kB
+        Buffers: shared hit=17
+        ->  Index Only Scan using submissions_submitted_at_idx on submissions (actual rows=3338.00 loops=1)
+              Index Cond: ((submitted_at >= '2026-10-10 00:00:00+03'::timestamp with time zone) AND (submitted_at < '2026-10-17 00:00:00+03'::timestamp with time zone))
+              Heap Fetches: 0
+              Index Searches: 1
+              Buffers: shared hit=17
+
+Вставлення 2000 рядків (5 повторів після прогріву, ROLLBACK): з індексами [159.2, 770.1, 926.6, 966.7, 852.1] мс; без нових індексів [891.7, 995.5, 832.8, 958.7, 850.3] мс

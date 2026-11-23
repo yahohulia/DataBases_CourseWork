@@ -1,0 +1,1816 @@
+{
+ "indexes": [
+  [
+   "assignments",
+   "assignments_module_idx",
+   "CREATE INDEX assignments_module_idx ON edu.assignments USING btree (module_id)"
+  ],
+  [
+   "assignments",
+   "assignments_pkey",
+   "CREATE UNIQUE INDEX assignments_pkey ON edu.assignments USING btree (id)"
+  ],
+  [
+   "audit_log",
+   "audit_log_pkey",
+   "CREATE UNIQUE INDEX audit_log_pkey ON edu.audit_log USING btree (id)"
+  ],
+  [
+   "audit_log",
+   "audit_log_record_idx",
+   "CREATE INDEX audit_log_record_idx ON edu.audit_log USING btree (table_name, record_id)"
+  ],
+  [
+   "categories",
+   "categories_name_key",
+   "CREATE UNIQUE INDEX categories_name_key ON edu.categories USING btree (name)"
+  ],
+  [
+   "categories",
+   "categories_pkey",
+   "CREATE UNIQUE INDEX categories_pkey ON edu.categories USING btree (id)"
+  ],
+  [
+   "courses",
+   "courses_category_idx",
+   "CREATE INDEX courses_category_idx ON edu.courses USING btree (category_id)"
+  ],
+  [
+   "courses",
+   "courses_code_key",
+   "CREATE UNIQUE INDEX courses_code_key ON edu.courses USING btree (code)"
+  ],
+  [
+   "courses",
+   "courses_pkey",
+   "CREATE UNIQUE INDEX courses_pkey ON edu.courses USING btree (id)"
+  ],
+  [
+   "courses",
+   "courses_teacher_idx",
+   "CREATE INDEX courses_teacher_idx ON edu.courses USING btree (teacher_id)"
+  ],
+  [
+   "enrollments",
+   "enrollments_course_student_uq",
+   "CREATE UNIQUE INDEX enrollments_course_student_uq ON edu.enrollments USING btree (course_id, student_id)"
+  ],
+  [
+   "enrollments",
+   "enrollments_pkey",
+   "CREATE UNIQUE INDEX enrollments_pkey ON edu.enrollments USING btree (id)"
+  ],
+  [
+   "enrollments",
+   "enrollments_student_idx",
+   "CREATE INDEX enrollments_student_idx ON edu.enrollments USING btree (student_id)"
+  ],
+  [
+   "grades",
+   "grades_pkey",
+   "CREATE UNIQUE INDEX grades_pkey ON edu.grades USING btree (id)"
+  ],
+  [
+   "grades",
+   "grades_submission_id_key",
+   "CREATE UNIQUE INDEX grades_submission_id_key ON edu.grades USING btree (submission_id)"
+  ],
+  [
+   "material_progress",
+   "material_progress_material_idx",
+   "CREATE INDEX material_progress_material_idx ON edu.material_progress USING btree (material_id)"
+  ],
+  [
+   "material_progress",
+   "material_progress_pkey",
+   "CREATE UNIQUE INDEX material_progress_pkey ON edu.material_progress USING btree (enrollment_id, material_id)"
+  ],
+  [
+   "materials",
+   "materials_module_position_uq",
+   "CREATE UNIQUE INDEX materials_module_position_uq ON edu.materials USING btree (module_id, \"position\")"
+  ],
+  [
+   "materials",
+   "materials_pkey",
+   "CREATE UNIQUE INDEX materials_pkey ON edu.materials USING btree (id)"
+  ],
+  [
+   "modules",
+   "modules_course_position_uq",
+   "CREATE UNIQUE INDEX modules_course_position_uq ON edu.modules USING btree (course_id, \"position\")"
+  ],
+  [
+   "modules",
+   "modules_pkey",
+   "CREATE UNIQUE INDEX modules_pkey ON edu.modules USING btree (id)"
+  ],
+  [
+   "mv_course_stats",
+   "mv_course_stats_pk",
+   "CREATE UNIQUE INDEX mv_course_stats_pk ON edu.mv_course_stats USING btree (course_id)"
+  ],
+  [
+   "submissions",
+   "submissions_attempt_uq",
+   "CREATE UNIQUE INDEX submissions_attempt_uq ON edu.submissions USING btree (assignment_id, enrollment_id, attempt_no)"
+  ],
+  [
+   "submissions",
+   "submissions_pkey",
+   "CREATE UNIQUE INDEX submissions_pkey ON edu.submissions USING btree (id)"
+  ],
+  [
+   "users",
+   "users_email_uq",
+   "CREATE UNIQUE INDEX users_email_uq ON edu.users USING btree (lower((email)::text))"
+  ],
+  [
+   "users",
+   "users_pkey",
+   "CREATE UNIQUE INDEX users_pkey ON edu.users USING btree (id)"
+  ]
+ ],
+ "comments": {
+  "categories": "Ієрархія категорій курсів",
+  "courses": "Навчальні курси",
+  "grades": "Результати перевірки робіт",
+  "enrollments": "Участь студента у курсі",
+  "modules": "Модулі (розділи) курсу",
+  "users": "Учасники платформи",
+  "submissions": "Спроби виконання завдань студентами",
+  "materials": "Навчальні матеріали модуля",
+  "audit_log": "Журнал аудиту (заповнюється тригерами)",
+  "assignments": "Завдання для самостійного виконання",
+  "material_progress": "Факт перегляду матеріалу студентом"
+ },
+ "rows": {
+  "users": 21,
+  "categories": 8,
+  "courses": 6,
+  "modules": 11,
+  "materials": 22,
+  "enrollments": 34,
+  "assignments": 10,
+  "submissions": 58,
+  "grades": 51,
+  "material_progress": 127,
+  "audit_log": 52
+ },
+ "grants": [
+  [
+   "assignments",
+   "DELETE",
+   "edu_api"
+  ],
+  [
+   "assignments",
+   "INSERT",
+   "edu_api"
+  ],
+  [
+   "assignments",
+   "SELECT",
+   "edu_api"
+  ],
+  [
+   "assignments",
+   "UPDATE",
+   "edu_api"
+  ],
+  [
+   "assignments",
+   "SELECT",
+   "edu_student"
+  ],
+  [
+   "assignments",
+   "DELETE",
+   "edu_teacher"
+  ],
+  [
+   "assignments",
+   "INSERT",
+   "edu_teacher"
+  ],
+  [
+   "assignments",
+   "SELECT",
+   "edu_teacher"
+  ],
+  [
+   "assignments",
+   "UPDATE",
+   "edu_teacher"
+  ],
+  [
+   "audit_log",
+   "SELECT",
+   "edu_api"
+  ],
+  [
+   "categories",
+   "SELECT",
+   "edu_analyst"
+  ],
+  [
+   "categories",
+   "DELETE",
+   "edu_api"
+  ],
+  [
+   "categories",
+   "INSERT",
+   "edu_api"
+  ],
+  [
+   "categories",
+   "SELECT",
+   "edu_api"
+  ],
+  [
+   "categories",
+   "UPDATE",
+   "edu_api"
+  ],
+  [
+   "categories",
+   "SELECT",
+   "edu_student"
+  ],
+  [
+   "categories",
+   "SELECT",
+   "edu_teacher"
+  ],
+  [
+   "courses",
+   "SELECT",
+   "edu_analyst"
+  ],
+  [
+   "courses",
+   "DELETE",
+   "edu_api"
+  ],
+  [
+   "courses",
+   "INSERT",
+   "edu_api"
+  ],
+  [
+   "courses",
+   "SELECT",
+   "edu_api"
+  ],
+  [
+   "courses",
+   "UPDATE",
+   "edu_api"
+  ],
+  [
+   "courses",
+   "SELECT",
+   "edu_student"
+  ],
+  [
+   "courses",
+   "INSERT",
+   "edu_teacher"
+  ],
+  [
+   "courses",
+   "SELECT",
+   "edu_teacher"
+  ],
+  [
+   "courses",
+   "UPDATE",
+   "edu_teacher"
+  ],
+  [
+   "enrollments",
+   "DELETE",
+   "edu_api"
+  ],
+  [
+   "enrollments",
+   "INSERT",
+   "edu_api"
+  ],
+  [
+   "enrollments",
+   "SELECT",
+   "edu_api"
+  ],
+  [
+   "enrollments",
+   "UPDATE",
+   "edu_api"
+  ],
+  [
+   "enrollments",
+   "SELECT",
+   "edu_student"
+  ],
+  [
+   "enrollments",
+   "SELECT",
+   "edu_teacher"
+  ],
+  [
+   "grades",
+   "DELETE",
+   "edu_api"
+  ],
+  [
+   "grades",
+   "INSERT",
+   "edu_api"
+  ],
+  [
+   "grades",
+   "SELECT",
+   "edu_api"
+  ],
+  [
+   "grades",
+   "UPDATE",
+   "edu_api"
+  ],
+  [
+   "grades",
+   "INSERT",
+   "edu_teacher"
+  ],
+  [
+   "grades",
+   "SELECT",
+   "edu_teacher"
+  ],
+  [
+   "grades",
+   "UPDATE",
+   "edu_teacher"
+  ],
+  [
+   "material_progress",
+   "DELETE",
+   "edu_api"
+  ],
+  [
+   "material_progress",
+   "INSERT",
+   "edu_api"
+  ],
+  [
+   "material_progress",
+   "SELECT",
+   "edu_api"
+  ],
+  [
+   "material_progress",
+   "UPDATE",
+   "edu_api"
+  ],
+  [
+   "material_progress",
+   "INSERT",
+   "edu_student"
+  ],
+  [
+   "material_progress",
+   "SELECT",
+   "edu_student"
+  ],
+  [
+   "material_progress",
+   "UPDATE",
+   "edu_student"
+  ],
+  [
+   "material_progress",
+   "SELECT",
+   "edu_teacher"
+  ],
+  [
+   "materials",
+   "DELETE",
+   "edu_api"
+  ],
+  [
+   "materials",
+   "INSERT",
+   "edu_api"
+  ],
+  [
+   "materials",
+   "SELECT",
+   "edu_api"
+  ],
+  [
+   "materials",
+   "UPDATE",
+   "edu_api"
+  ],
+  [
+   "materials",
+   "SELECT",
+   "edu_student"
+  ],
+  [
+   "materials",
+   "DELETE",
+   "edu_teacher"
+  ],
+  [
+   "materials",
+   "INSERT",
+   "edu_teacher"
+  ],
+  [
+   "materials",
+   "SELECT",
+   "edu_teacher"
+  ],
+  [
+   "materials",
+   "UPDATE",
+   "edu_teacher"
+  ],
+  [
+   "modules",
+   "DELETE",
+   "edu_api"
+  ],
+  [
+   "modules",
+   "INSERT",
+   "edu_api"
+  ],
+  [
+   "modules",
+   "SELECT",
+   "edu_api"
+  ],
+  [
+   "modules",
+   "UPDATE",
+   "edu_api"
+  ],
+  [
+   "modules",
+   "SELECT",
+   "edu_student"
+  ],
+  [
+   "modules",
+   "DELETE",
+   "edu_teacher"
+  ],
+  [
+   "modules",
+   "INSERT",
+   "edu_teacher"
+  ],
+  [
+   "modules",
+   "SELECT",
+   "edu_teacher"
+  ],
+  [
+   "modules",
+   "UPDATE",
+   "edu_teacher"
+  ],
+  [
+   "submissions",
+   "DELETE",
+   "edu_api"
+  ],
+  [
+   "submissions",
+   "INSERT",
+   "edu_api"
+  ],
+  [
+   "submissions",
+   "SELECT",
+   "edu_api"
+  ],
+  [
+   "submissions",
+   "UPDATE",
+   "edu_api"
+  ],
+  [
+   "submissions",
+   "INSERT",
+   "edu_student"
+  ],
+  [
+   "submissions",
+   "SELECT",
+   "edu_student"
+  ],
+  [
+   "submissions",
+   "SELECT",
+   "edu_teacher"
+  ],
+  [
+   "users",
+   "DELETE",
+   "edu_api"
+  ],
+  [
+   "users",
+   "INSERT",
+   "edu_api"
+  ],
+  [
+   "users",
+   "SELECT",
+   "edu_api"
+  ],
+  [
+   "users",
+   "UPDATE",
+   "edu_api"
+  ],
+  [
+   "users",
+   "SELECT",
+   "edu_teacher"
+  ],
+  [
+   "v_course_overview",
+   "SELECT",
+   "edu_analyst"
+  ],
+  [
+   "v_course_overview",
+   "DELETE",
+   "edu_api"
+  ],
+  [
+   "v_course_overview",
+   "INSERT",
+   "edu_api"
+  ],
+  [
+   "v_course_overview",
+   "SELECT",
+   "edu_api"
+  ],
+  [
+   "v_course_overview",
+   "UPDATE",
+   "edu_api"
+  ],
+  [
+   "v_course_overview",
+   "SELECT",
+   "edu_student"
+  ],
+  [
+   "v_course_overview",
+   "SELECT",
+   "edu_teacher"
+  ],
+  [
+   "v_gradebook",
+   "SELECT",
+   "edu_analyst"
+  ],
+  [
+   "v_gradebook",
+   "DELETE",
+   "edu_api"
+  ],
+  [
+   "v_gradebook",
+   "INSERT",
+   "edu_api"
+  ],
+  [
+   "v_gradebook",
+   "SELECT",
+   "edu_api"
+  ],
+  [
+   "v_gradebook",
+   "UPDATE",
+   "edu_api"
+  ],
+  [
+   "v_gradebook",
+   "SELECT",
+   "edu_teacher"
+  ],
+  [
+   "v_pending_reviews",
+   "DELETE",
+   "edu_api"
+  ],
+  [
+   "v_pending_reviews",
+   "INSERT",
+   "edu_api"
+  ],
+  [
+   "v_pending_reviews",
+   "SELECT",
+   "edu_api"
+  ],
+  [
+   "v_pending_reviews",
+   "UPDATE",
+   "edu_api"
+  ],
+  [
+   "v_pending_reviews",
+   "SELECT",
+   "edu_teacher"
+  ]
+ ],
+ "triggers": [
+  [
+   "courses_status_audit",
+   "courses",
+   "CREATE TRIGGER courses_status_audit AFTER UPDATE OF status ON edu.courses FOR EACH ROW WHEN (((old.status)::text IS DISTINCT FROM (new.status)::text)) EXECUTE FUNCTION edu.trg_course_audit()"
+  ],
+  [
+   "courses_status_transition",
+   "courses",
+   "CREATE TRIGGER courses_status_transition BEFORE UPDATE OF status ON edu.courses FOR EACH ROW EXECUTE FUNCTION edu.trg_course_status_transition()"
+  ],
+  [
+   "courses_teacher_check",
+   "courses",
+   "CREATE TRIGGER courses_teacher_check BEFORE INSERT OR UPDATE OF teacher_id ON edu.courses FOR EACH ROW EXECUTE FUNCTION edu.trg_course_teacher_check()"
+  ],
+  [
+   "enrollments_check",
+   "enrollments",
+   "CREATE TRIGGER enrollments_check BEFORE INSERT OR UPDATE ON edu.enrollments FOR EACH ROW EXECUTE FUNCTION edu.trg_enrollment_check()"
+  ],
+  [
+   "grades_audit",
+   "grades",
+   "CREATE TRIGGER grades_audit AFTER INSERT OR DELETE OR UPDATE ON edu.grades FOR EACH ROW EXECUTE FUNCTION edu.trg_grade_audit()"
+  ],
+  [
+   "grades_check",
+   "grades",
+   "CREATE TRIGGER grades_check BEFORE INSERT OR UPDATE ON edu.grades FOR EACH ROW EXECUTE FUNCTION edu.trg_grade_check()"
+  ],
+  [
+   "submissions_before_insert",
+   "submissions",
+   "CREATE TRIGGER submissions_before_insert BEFORE INSERT ON edu.submissions FOR EACH ROW EXECUTE FUNCTION edu.trg_submission_before_insert()"
+  ]
+ ],
+ "version": "18.3",
+ "columns": {
+  "assignments": [
+   {
+    "name": "id",
+    "num": 1,
+    "type": "integer",
+    "not_null": true,
+    "default": null,
+    "identity": "a",
+    "cons": [
+     "PK"
+    ]
+   },
+   {
+    "name": "module_id",
+    "num": 2,
+    "type": "integer",
+    "not_null": true,
+    "default": null,
+    "identity": "",
+    "cons": [
+     "FK → modules, ON DELETE RESTRICT"
+    ]
+   },
+   {
+    "name": "title",
+    "num": 3,
+    "type": "varchar(200)",
+    "not_null": true,
+    "default": null,
+    "identity": "",
+    "cons": [
+     "CHECK (btrim(title) <> '')"
+    ]
+   },
+   {
+    "name": "description",
+    "num": 4,
+    "type": "text",
+    "not_null": false,
+    "default": null,
+    "identity": "",
+    "cons": []
+   },
+   {
+    "name": "max_score",
+    "num": 5,
+    "type": "numeric(5,2)",
+    "not_null": true,
+    "default": null,
+    "identity": "",
+    "cons": [
+     "CHECK ((max_score > 0) AND (max_score <= 100))"
+    ]
+   },
+   {
+    "name": "due_at",
+    "num": 6,
+    "type": "timestamptz",
+    "not_null": true,
+    "default": null,
+    "identity": "",
+    "cons": []
+   },
+   {
+    "name": "max_attempts",
+    "num": 7,
+    "type": "smallint",
+    "not_null": true,
+    "default": "3",
+    "identity": "",
+    "cons": [
+     "CHECK ((max_attempts >= 1) AND (max_attempts <= 10))"
+    ]
+   },
+   {
+    "name": "created_at",
+    "num": 8,
+    "type": "timestamptz",
+    "not_null": true,
+    "default": "now()",
+    "identity": "",
+    "cons": []
+   }
+  ],
+  "audit_log": [
+   {
+    "name": "id",
+    "num": 1,
+    "type": "bigint",
+    "not_null": true,
+    "default": null,
+    "identity": "a",
+    "cons": [
+     "PK"
+    ]
+   },
+   {
+    "name": "table_name",
+    "num": 2,
+    "type": "varchar(40)",
+    "not_null": true,
+    "default": null,
+    "identity": "",
+    "cons": []
+   },
+   {
+    "name": "record_id",
+    "num": 3,
+    "type": "bigint",
+    "not_null": true,
+    "default": null,
+    "identity": "",
+    "cons": []
+   },
+   {
+    "name": "action",
+    "num": 4,
+    "type": "varchar(6)",
+    "not_null": true,
+    "default": null,
+    "identity": "",
+    "cons": [
+     "CHECK (action IN ('INSERT', 'UPDATE', 'DELETE'))"
+    ]
+   },
+   {
+    "name": "old_data",
+    "num": 5,
+    "type": "jsonb",
+    "not_null": false,
+    "default": null,
+    "identity": "",
+    "cons": []
+   },
+   {
+    "name": "new_data",
+    "num": 6,
+    "type": "jsonb",
+    "not_null": false,
+    "default": null,
+    "identity": "",
+    "cons": []
+   },
+   {
+    "name": "changed_by",
+    "num": 7,
+    "type": "text",
+    "not_null": true,
+    "default": "CURRENT_USER",
+    "identity": "",
+    "cons": []
+   },
+   {
+    "name": "changed_at",
+    "num": 8,
+    "type": "timestamptz",
+    "not_null": true,
+    "default": "clock_timestamp()",
+    "identity": "",
+    "cons": []
+   }
+  ],
+  "categories": [
+   {
+    "name": "id",
+    "num": 1,
+    "type": "integer",
+    "not_null": true,
+    "default": null,
+    "identity": "a",
+    "cons": [
+     "PK"
+    ]
+   },
+   {
+    "name": "name",
+    "num": 2,
+    "type": "varchar(100)",
+    "not_null": true,
+    "default": null,
+    "identity": "",
+    "cons": [
+     "CHECK (btrim(name) <> '')",
+     "UNIQUE"
+    ]
+   },
+   {
+    "name": "parent_id",
+    "num": 3,
+    "type": "integer",
+    "not_null": false,
+    "default": null,
+    "identity": "",
+    "cons": [
+     "FK → categories, ON DELETE RESTRICT"
+    ]
+   }
+  ],
+  "courses": [
+   {
+    "name": "id",
+    "num": 1,
+    "type": "integer",
+    "not_null": true,
+    "default": null,
+    "identity": "a",
+    "cons": [
+     "PK"
+    ]
+   },
+   {
+    "name": "code",
+    "num": 2,
+    "type": "varchar(20)",
+    "not_null": true,
+    "default": null,
+    "identity": "",
+    "cons": [
+     "CHECK (code ~ '^[A-Z]{2,6}-[0-9]{3}$')",
+     "UNIQUE"
+    ]
+   },
+   {
+    "name": "title",
+    "num": 3,
+    "type": "varchar(200)",
+    "not_null": true,
+    "default": null,
+    "identity": "",
+    "cons": [
+     "CHECK (btrim(title) <> '')"
+    ]
+   },
+   {
+    "name": "description",
+    "num": 4,
+    "type": "text",
+    "not_null": false,
+    "default": null,
+    "identity": "",
+    "cons": []
+   },
+   {
+    "name": "category_id",
+    "num": 5,
+    "type": "integer",
+    "not_null": true,
+    "default": null,
+    "identity": "",
+    "cons": [
+     "FK → categories, ON DELETE RESTRICT"
+    ]
+   },
+   {
+    "name": "teacher_id",
+    "num": 6,
+    "type": "integer",
+    "not_null": true,
+    "default": null,
+    "identity": "",
+    "cons": [
+     "FK → users, ON DELETE RESTRICT"
+    ]
+   },
+   {
+    "name": "status",
+    "num": 7,
+    "type": "varchar(10)",
+    "not_null": true,
+    "default": "'draft'::character varying",
+    "identity": "",
+    "cons": [
+     "CHECK (status IN ('draft', 'published', 'archived'))"
+    ]
+   },
+   {
+    "name": "start_date",
+    "num": 8,
+    "type": "date",
+    "not_null": true,
+    "default": null,
+    "identity": "",
+    "cons": []
+   },
+   {
+    "name": "end_date",
+    "num": 9,
+    "type": "date",
+    "not_null": true,
+    "default": null,
+    "identity": "",
+    "cons": []
+   },
+   {
+    "name": "max_students",
+    "num": 10,
+    "type": "integer",
+    "not_null": true,
+    "default": "30",
+    "identity": "",
+    "cons": [
+     "CHECK ((max_students >= 1) AND (max_students <= 1000))"
+    ]
+   },
+   {
+    "name": "created_at",
+    "num": 11,
+    "type": "timestamptz",
+    "not_null": true,
+    "default": "now()",
+    "identity": "",
+    "cons": []
+   }
+  ],
+  "enrollments": [
+   {
+    "name": "id",
+    "num": 1,
+    "type": "integer",
+    "not_null": true,
+    "default": null,
+    "identity": "a",
+    "cons": [
+     "PK"
+    ]
+   },
+   {
+    "name": "course_id",
+    "num": 2,
+    "type": "integer",
+    "not_null": true,
+    "default": null,
+    "identity": "",
+    "cons": [
+     "FK → courses, ON DELETE RESTRICT"
+    ]
+   },
+   {
+    "name": "student_id",
+    "num": 3,
+    "type": "integer",
+    "not_null": true,
+    "default": null,
+    "identity": "",
+    "cons": [
+     "FK → users, ON DELETE RESTRICT"
+    ]
+   },
+   {
+    "name": "enrolled_at",
+    "num": 4,
+    "type": "timestamptz",
+    "not_null": true,
+    "default": "now()",
+    "identity": "",
+    "cons": []
+   },
+   {
+    "name": "status",
+    "num": 5,
+    "type": "varchar(10)",
+    "not_null": true,
+    "default": "'active'::character varying",
+    "identity": "",
+    "cons": [
+     "CHECK (status IN ('active', 'completed', 'dropped'))"
+    ]
+   },
+   {
+    "name": "final_score",
+    "num": 6,
+    "type": "numeric(5,2)",
+    "not_null": false,
+    "default": null,
+    "identity": "",
+    "cons": [
+     "CHECK ((final_score >= 0) AND (final_score <= 100))"
+    ]
+   },
+   {
+    "name": "completed_at",
+    "num": 7,
+    "type": "timestamptz",
+    "not_null": false,
+    "default": null,
+    "identity": "",
+    "cons": []
+   }
+  ],
+  "grades": [
+   {
+    "name": "id",
+    "num": 1,
+    "type": "bigint",
+    "not_null": true,
+    "default": null,
+    "identity": "a",
+    "cons": [
+     "PK"
+    ]
+   },
+   {
+    "name": "submission_id",
+    "num": 2,
+    "type": "bigint",
+    "not_null": true,
+    "default": null,
+    "identity": "",
+    "cons": [
+     "FK → submissions, ON DELETE CASCADE",
+     "UNIQUE"
+    ]
+   },
+   {
+    "name": "grader_id",
+    "num": 3,
+    "type": "integer",
+    "not_null": true,
+    "default": null,
+    "identity": "",
+    "cons": [
+     "FK → users, ON DELETE RESTRICT"
+    ]
+   },
+   {
+    "name": "score",
+    "num": 4,
+    "type": "numeric(5,2)",
+    "not_null": true,
+    "default": null,
+    "identity": "",
+    "cons": [
+     "CHECK (score >= 0)"
+    ]
+   },
+   {
+    "name": "feedback",
+    "num": 5,
+    "type": "text",
+    "not_null": false,
+    "default": null,
+    "identity": "",
+    "cons": []
+   },
+   {
+    "name": "graded_at",
+    "num": 6,
+    "type": "timestamptz",
+    "not_null": true,
+    "default": "now()",
+    "identity": "",
+    "cons": []
+   }
+  ],
+  "material_progress": [
+   {
+    "name": "enrollment_id",
+    "num": 1,
+    "type": "integer",
+    "not_null": true,
+    "default": null,
+    "identity": "",
+    "cons": [
+     "FK → enrollments, ON DELETE CASCADE"
+    ]
+   },
+   {
+    "name": "material_id",
+    "num": 2,
+    "type": "integer",
+    "not_null": true,
+    "default": null,
+    "identity": "",
+    "cons": [
+     "FK → materials, ON DELETE CASCADE"
+    ]
+   },
+   {
+    "name": "first_viewed_at",
+    "num": 3,
+    "type": "timestamptz",
+    "not_null": true,
+    "default": "now()",
+    "identity": "",
+    "cons": []
+   },
+   {
+    "name": "last_viewed_at",
+    "num": 4,
+    "type": "timestamptz",
+    "not_null": true,
+    "default": "now()",
+    "identity": "",
+    "cons": []
+   },
+   {
+    "name": "views_count",
+    "num": 5,
+    "type": "integer",
+    "not_null": true,
+    "default": "1",
+    "identity": "",
+    "cons": [
+     "CHECK (views_count > 0)"
+    ]
+   }
+  ],
+  "materials": [
+   {
+    "name": "id",
+    "num": 1,
+    "type": "integer",
+    "not_null": true,
+    "default": null,
+    "identity": "a",
+    "cons": [
+     "PK"
+    ]
+   },
+   {
+    "name": "module_id",
+    "num": 2,
+    "type": "integer",
+    "not_null": true,
+    "default": null,
+    "identity": "",
+    "cons": [
+     "FK → modules, ON DELETE CASCADE"
+    ]
+   },
+   {
+    "name": "title",
+    "num": 3,
+    "type": "varchar(200)",
+    "not_null": true,
+    "default": null,
+    "identity": "",
+    "cons": [
+     "CHECK (btrim(title) <> '')"
+    ]
+   },
+   {
+    "name": "material_type",
+    "num": 4,
+    "type": "varchar(10)",
+    "not_null": true,
+    "default": null,
+    "identity": "",
+    "cons": [
+     "CHECK (material_type IN ('video', 'pdf', 'link', 'text'))"
+    ]
+   },
+   {
+    "name": "url",
+    "num": 5,
+    "type": "varchar(500)",
+    "not_null": false,
+    "default": null,
+    "identity": "",
+    "cons": []
+   },
+   {
+    "name": "content",
+    "num": 6,
+    "type": "text",
+    "not_null": false,
+    "default": null,
+    "identity": "",
+    "cons": []
+   },
+   {
+    "name": "duration_min",
+    "num": 7,
+    "type": "smallint",
+    "not_null": false,
+    "default": null,
+    "identity": "",
+    "cons": [
+     "CHECK (duration_min > 0)"
+    ]
+   },
+   {
+    "name": "position",
+    "num": 8,
+    "type": "smallint",
+    "not_null": true,
+    "default": null,
+    "identity": "",
+    "cons": [
+     "CHECK (\"position\" > 0)"
+    ]
+   },
+   {
+    "name": "created_at",
+    "num": 9,
+    "type": "timestamptz",
+    "not_null": true,
+    "default": "now()",
+    "identity": "",
+    "cons": []
+   }
+  ],
+  "modules": [
+   {
+    "name": "id",
+    "num": 1,
+    "type": "integer",
+    "not_null": true,
+    "default": null,
+    "identity": "a",
+    "cons": [
+     "PK"
+    ]
+   },
+   {
+    "name": "course_id",
+    "num": 2,
+    "type": "integer",
+    "not_null": true,
+    "default": null,
+    "identity": "",
+    "cons": [
+     "FK → courses, ON DELETE CASCADE"
+    ]
+   },
+   {
+    "name": "title",
+    "num": 3,
+    "type": "varchar(200)",
+    "not_null": true,
+    "default": null,
+    "identity": "",
+    "cons": [
+     "CHECK (btrim(title) <> '')"
+    ]
+   },
+   {
+    "name": "position",
+    "num": 4,
+    "type": "smallint",
+    "not_null": true,
+    "default": null,
+    "identity": "",
+    "cons": [
+     "CHECK (\"position\" > 0)"
+    ]
+   }
+  ],
+  "submissions": [
+   {
+    "name": "id",
+    "num": 1,
+    "type": "bigint",
+    "not_null": true,
+    "default": null,
+    "identity": "a",
+    "cons": [
+     "PK"
+    ]
+   },
+   {
+    "name": "assignment_id",
+    "num": 2,
+    "type": "integer",
+    "not_null": true,
+    "default": null,
+    "identity": "",
+    "cons": [
+     "FK → assignments, ON DELETE RESTRICT"
+    ]
+   },
+   {
+    "name": "enrollment_id",
+    "num": 3,
+    "type": "integer",
+    "not_null": true,
+    "default": null,
+    "identity": "",
+    "cons": [
+     "FK → enrollments, ON DELETE RESTRICT"
+    ]
+   },
+   {
+    "name": "attempt_no",
+    "num": 4,
+    "type": "smallint",
+    "not_null": true,
+    "default": null,
+    "identity": "",
+    "cons": [
+     "CHECK (attempt_no > 0)"
+    ]
+   },
+   {
+    "name": "answer_text",
+    "num": 5,
+    "type": "text",
+    "not_null": false,
+    "default": null,
+    "identity": "",
+    "cons": []
+   },
+   {
+    "name": "answer_url",
+    "num": 6,
+    "type": "varchar(500)",
+    "not_null": false,
+    "default": null,
+    "identity": "",
+    "cons": []
+   },
+   {
+    "name": "submitted_at",
+    "num": 7,
+    "type": "timestamptz",
+    "not_null": true,
+    "default": "now()",
+    "identity": "",
+    "cons": []
+   },
+   {
+    "name": "is_late",
+    "num": 8,
+    "type": "boolean",
+    "not_null": true,
+    "default": "false",
+    "identity": "",
+    "cons": []
+   },
+   {
+    "name": "status",
+    "num": 9,
+    "type": "varchar(10)",
+    "not_null": true,
+    "default": "'submitted'::character varying",
+    "identity": "",
+    "cons": [
+     "CHECK (status IN ('submitted', 'graded', 'returned'))"
+    ]
+   }
+  ],
+  "users": [
+   {
+    "name": "id",
+    "num": 1,
+    "type": "integer",
+    "not_null": true,
+    "default": null,
+    "identity": "a",
+    "cons": [
+     "PK"
+    ]
+   },
+   {
+    "name": "email",
+    "num": 2,
+    "type": "varchar(120)",
+    "not_null": true,
+    "default": null,
+    "identity": "",
+    "cons": [
+     "CHECK (email ~* '^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$')"
+    ]
+   },
+   {
+    "name": "full_name",
+    "num": 3,
+    "type": "varchar(150)",
+    "not_null": true,
+    "default": null,
+    "identity": "",
+    "cons": [
+     "CHECK (btrim(full_name) <> '')"
+    ]
+   },
+   {
+    "name": "role_code",
+    "num": 4,
+    "type": "varchar(10)",
+    "not_null": true,
+    "default": null,
+    "identity": "",
+    "cons": [
+     "CHECK (role_code IN ('student', 'teacher', 'admin'))"
+    ]
+   },
+   {
+    "name": "is_active",
+    "num": 5,
+    "type": "boolean",
+    "not_null": true,
+    "default": "true",
+    "identity": "",
+    "cons": []
+   },
+   {
+    "name": "created_at",
+    "num": 6,
+    "type": "timestamptz",
+    "not_null": true,
+    "default": "now()",
+    "identity": "",
+    "cons": []
+   }
+  ]
+ },
+ "constraints": {
+  "assignments": [
+   {
+    "name": "assignments_max_attempts_check",
+    "type": "c",
+    "def": "CHECK ((max_attempts >= 1) AND (max_attempts <= 10))"
+   },
+   {
+    "name": "assignments_max_score_check",
+    "type": "c",
+    "def": "CHECK ((max_score > 0) AND (max_score <= 100))"
+   },
+   {
+    "name": "assignments_module_id_fkey",
+    "type": "f",
+    "def": "FOREIGN KEY (module_id) REFERENCES edu.modules(id) ON DELETE RESTRICT"
+   },
+   {
+    "name": "assignments_pkey",
+    "type": "p",
+    "def": "PRIMARY KEY (id)"
+   },
+   {
+    "name": "assignments_title_check",
+    "type": "c",
+    "def": "CHECK (btrim(title) <> '')"
+   }
+  ],
+  "audit_log": [
+   {
+    "name": "audit_log_action_check",
+    "type": "c",
+    "def": "CHECK (action IN ('INSERT', 'UPDATE', 'DELETE'))"
+   },
+   {
+    "name": "audit_log_pkey",
+    "type": "p",
+    "def": "PRIMARY KEY (id)"
+   }
+  ],
+  "categories": [
+   {
+    "name": "categories_name_check",
+    "type": "c",
+    "def": "CHECK (btrim(name) <> '')"
+   },
+   {
+    "name": "categories_name_key",
+    "type": "u",
+    "def": "UNIQUE (name)"
+   },
+   {
+    "name": "categories_not_self_parent_chk",
+    "type": "c",
+    "def": "CHECK (parent_id <> id)"
+   },
+   {
+    "name": "categories_parent_id_fkey",
+    "type": "f",
+    "def": "FOREIGN KEY (parent_id) REFERENCES edu.categories(id) ON DELETE RESTRICT"
+   },
+   {
+    "name": "categories_pkey",
+    "type": "p",
+    "def": "PRIMARY KEY (id)"
+   }
+  ],
+  "courses": [
+   {
+    "name": "courses_category_id_fkey",
+    "type": "f",
+    "def": "FOREIGN KEY (category_id) REFERENCES edu.categories(id) ON DELETE RESTRICT"
+   },
+   {
+    "name": "courses_code_check",
+    "type": "c",
+    "def": "CHECK (code ~ '^[A-Z]{2,6}-[0-9]{3}$')"
+   },
+   {
+    "name": "courses_code_key",
+    "type": "u",
+    "def": "UNIQUE (code)"
+   },
+   {
+    "name": "courses_dates_chk",
+    "type": "c",
+    "def": "CHECK (end_date >= start_date)"
+   },
+   {
+    "name": "courses_max_students_check",
+    "type": "c",
+    "def": "CHECK ((max_students >= 1) AND (max_students <= 1000))"
+   },
+   {
+    "name": "courses_pkey",
+    "type": "p",
+    "def": "PRIMARY KEY (id)"
+   },
+   {
+    "name": "courses_status_check",
+    "type": "c",
+    "def": "CHECK (status IN ('draft', 'published', 'archived'))"
+   },
+   {
+    "name": "courses_teacher_id_fkey",
+    "type": "f",
+    "def": "FOREIGN KEY (teacher_id) REFERENCES edu.users(id) ON DELETE RESTRICT"
+   },
+   {
+    "name": "courses_title_check",
+    "type": "c",
+    "def": "CHECK (btrim(title) <> '')"
+   }
+  ],
+  "enrollments": [
+   {
+    "name": "enrollments_completed_chk",
+    "type": "c",
+    "def": "CHECK ((status = 'completed') = (completed_at IS NOT NULL))"
+   },
+   {
+    "name": "enrollments_course_id_fkey",
+    "type": "f",
+    "def": "FOREIGN KEY (course_id) REFERENCES edu.courses(id) ON DELETE RESTRICT"
+   },
+   {
+    "name": "enrollments_course_student_uq",
+    "type": "u",
+    "def": "UNIQUE (course_id, student_id)"
+   },
+   {
+    "name": "enrollments_final_score_check",
+    "type": "c",
+    "def": "CHECK ((final_score >= 0) AND (final_score <= 100))"
+   },
+   {
+    "name": "enrollments_pkey",
+    "type": "p",
+    "def": "PRIMARY KEY (id)"
+   },
+   {
+    "name": "enrollments_status_check",
+    "type": "c",
+    "def": "CHECK (status IN ('active', 'completed', 'dropped'))"
+   },
+   {
+    "name": "enrollments_student_id_fkey",
+    "type": "f",
+    "def": "FOREIGN KEY (student_id) REFERENCES edu.users(id) ON DELETE RESTRICT"
+   }
+  ],
+  "grades": [
+   {
+    "name": "grades_grader_id_fkey",
+    "type": "f",
+    "def": "FOREIGN KEY (grader_id) REFERENCES edu.users(id) ON DELETE RESTRICT"
+   },
+   {
+    "name": "grades_pkey",
+    "type": "p",
+    "def": "PRIMARY KEY (id)"
+   },
+   {
+    "name": "grades_score_check",
+    "type": "c",
+    "def": "CHECK (score >= 0)"
+   },
+   {
+    "name": "grades_submission_id_fkey",
+    "type": "f",
+    "def": "FOREIGN KEY (submission_id) REFERENCES edu.submissions(id) ON DELETE CASCADE"
+   },
+   {
+    "name": "grades_submission_id_key",
+    "type": "u",
+    "def": "UNIQUE (submission_id)"
+   }
+  ],
+  "material_progress": [
+   {
+    "name": "material_progress_enrollment_id_fkey",
+    "type": "f",
+    "def": "FOREIGN KEY (enrollment_id) REFERENCES edu.enrollments(id) ON DELETE CASCADE"
+   },
+   {
+    "name": "material_progress_material_id_fkey",
+    "type": "f",
+    "def": "FOREIGN KEY (material_id) REFERENCES edu.materials(id) ON DELETE CASCADE"
+   },
+   {
+    "name": "material_progress_pkey",
+    "type": "p",
+    "def": "PRIMARY KEY (enrollment_id, material_id)"
+   },
+   {
+    "name": "material_progress_time_chk",
+    "type": "c",
+    "def": "CHECK (last_viewed_at >= first_viewed_at)"
+   },
+   {
+    "name": "material_progress_views_count_check",
+    "type": "c",
+    "def": "CHECK (views_count > 0)"
+   }
+  ],
+  "materials": [
+   {
+    "name": "materials_duration_min_check",
+    "type": "c",
+    "def": "CHECK (duration_min > 0)"
+   },
+   {
+    "name": "materials_material_type_check",
+    "type": "c",
+    "def": "CHECK (material_type IN ('video', 'pdf', 'link', 'text'))"
+   },
+   {
+    "name": "materials_module_id_fkey",
+    "type": "f",
+    "def": "FOREIGN KEY (module_id) REFERENCES edu.modules(id) ON DELETE CASCADE"
+   },
+   {
+    "name": "materials_module_position_uq",
+    "type": "u",
+    "def": "UNIQUE (module_id, \"position\")"
+   },
+   {
+    "name": "materials_payload_chk",
+    "type": "c",
+    "def": "CHECK (((material_type = 'text') AND (content IS NOT NULL)) OR ((material_type <> 'text') AND (url IS NOT NULL)))"
+   },
+   {
+    "name": "materials_pkey",
+    "type": "p",
+    "def": "PRIMARY KEY (id)"
+   },
+   {
+    "name": "materials_position_check",
+    "type": "c",
+    "def": "CHECK (\"position\" > 0)"
+   },
+   {
+    "name": "materials_title_check",
+    "type": "c",
+    "def": "CHECK (btrim(title) <> '')"
+   }
+  ],
+  "modules": [
+   {
+    "name": "modules_course_id_fkey",
+    "type": "f",
+    "def": "FOREIGN KEY (course_id) REFERENCES edu.courses(id) ON DELETE CASCADE"
+   },
+   {
+    "name": "modules_course_position_uq",
+    "type": "u",
+    "def": "UNIQUE (course_id, \"position\")"
+   },
+   {
+    "name": "modules_pkey",
+    "type": "p",
+    "def": "PRIMARY KEY (id)"
+   },
+   {
+    "name": "modules_position_check",
+    "type": "c",
+    "def": "CHECK (\"position\" > 0)"
+   },
+   {
+    "name": "modules_title_check",
+    "type": "c",
+    "def": "CHECK (btrim(title) <> '')"
+   }
+  ],
+  "submissions": [
+   {
+    "name": "submissions_answer_chk",
+    "type": "c",
+    "def": "CHECK ((answer_text IS NOT NULL) OR (answer_url IS NOT NULL))"
+   },
+   {
+    "name": "submissions_assignment_id_fkey",
+    "type": "f",
+    "def": "FOREIGN KEY (assignment_id) REFERENCES edu.assignments(id) ON DELETE RESTRICT"
+   },
+   {
+    "name": "submissions_attempt_no_check",
+    "type": "c",
+    "def": "CHECK (attempt_no > 0)"
+   },
+   {
+    "name": "submissions_attempt_uq",
+    "type": "u",
+    "def": "UNIQUE (assignment_id, enrollment_id, attempt_no)"
+   },
+   {
+    "name": "submissions_enrollment_id_fkey",
+    "type": "f",
+    "def": "FOREIGN KEY (enrollment_id) REFERENCES edu.enrollments(id) ON DELETE RESTRICT"
+   },
+   {
+    "name": "submissions_pkey",
+    "type": "p",
+    "def": "PRIMARY KEY (id)"
+   },
+   {
+    "name": "submissions_status_check",
+    "type": "c",
+    "def": "CHECK (status IN ('submitted', 'graded', 'returned'))"
+   }
+  ],
+  "users": [
+   {
+    "name": "users_email_format_chk",
+    "type": "c",
+    "def": "CHECK (email ~* '^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$')"
+   },
+   {
+    "name": "users_full_name_check",
+    "type": "c",
+    "def": "CHECK (btrim(full_name) <> '')"
+   },
+   {
+    "name": "users_pkey",
+    "type": "p",
+    "def": "PRIMARY KEY (id)"
+   },
+   {
+    "name": "users_role_code_check",
+    "type": "c",
+    "def": "CHECK (role_code IN ('student', 'teacher', 'admin'))"
+   }
+  ]
+ }
+}

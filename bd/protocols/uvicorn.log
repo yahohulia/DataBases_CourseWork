@@ -1,0 +1,52 @@
+INFO:     Started server process [14244]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:61323 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61325 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61325 - "GET /courses?status=published HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61325 - "POST /courses HTTP/1.1" 201 Created
+INFO:     127.0.0.1:61325 - "GET /courses/7 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61325 - "PATCH /courses/7 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61325 - "PUT /courses/7 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61325 - "POST /courses HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:61325 - "POST /courses HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:61325 - "POST /courses HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:61325 - "POST /courses HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:61325 - "POST /modules HTTP/1.1" 201 Created
+INFO:     127.0.0.1:61325 - "POST /materials HTTP/1.1" 201 Created
+INFO:     127.0.0.1:61325 - "POST /assignments HTTP/1.1" 201 Created
+INFO:     127.0.0.1:61325 - "POST /enrollments HTTP/1.1" 201 Created
+INFO:     127.0.0.1:61325 - "POST /enrollments HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:61325 - "POST /enrollments HTTP/1.1" 201 Created
+INFO:     127.0.0.1:61325 - "POST /enrollments HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:61325 - "POST /submissions HTTP/1.1" 201 Created
+INFO:     127.0.0.1:61325 - "POST /submissions HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:61325 - "POST /grades HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:61325 - "POST /grades HTTP/1.1" 201 Created
+INFO:     127.0.0.1:61325 - "GET /submissions/59 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61325 - "POST /material-progress HTTP/1.1" 201 Created
+INFO:     127.0.0.1:61325 - "POST /material-progress HTTP/1.1" 201 Created
+INFO:     127.0.0.1:61325 - "GET /enrollments/35/progress HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61325 - "GET /courses/7/report HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61325 - "GET /courses/7/structure HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61325 - "POST /enrollments/35/complete HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61325 - "DELETE /courses/7 HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:61325 - "GET /reports/audit-log?table_name=grades&limit=3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61325 - "GET /reports/course-overview?status=published HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61325 - "GET /reports/course-stats?refresh=true HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61325 - "GET /reports/top-students?course_id=1&limit=3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61325 - "GET /categories/tree HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61325 - "GET /courses/9999 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:61325 - "GET /courses/9999/report HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:61325 - "GET /grades?submission_id=59 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61325 - "DELETE /grades/53 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:61325 - "DELETE /submissions/59 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:61325 - "DELETE /material-progress/35/23 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:61325 - "DELETE /enrollments/35 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:61325 - "DELETE /enrollments/37 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:61325 - "DELETE /assignments/11 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:61325 - "DELETE /courses/7 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:61325 - "GET /courses/7 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:61332 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61334 - "GET /courses?limit=2 HTTP/1.1" 200 OK

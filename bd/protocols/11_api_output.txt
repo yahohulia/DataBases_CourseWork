@@ -1,0 +1,46 @@
+API: http://127.0.0.1:8000
+A01   PASS  GET    /health                                  -> 200 (очік. 200)  {"current_user": "edu_api", "current_database": "elearn_db", "version": "PostgreSQL 18.3 on x86_64-windows, compiled by msvc-19.44.35223, 64-bit"}
+A02   PASS  GET    /courses?status=published                -> 200 (очік. 200)  4 записів
+A03   PASS  POST   /courses                                 -> 201 (очік. 201)  {"code": "OPS-210", "title": "Основи DevOps", "description": null}
+A04   PASS  GET    /courses/7                               -> 200 (очік. 200)  {"code": "OPS-210", "title": "Основи DevOps", "description": null}
+A05   PASS  PATCH  /courses/7                               -> 200 (очік. 200)  {"code": "OPS-210", "title": "Основи DevOps", "description": null}
+A06   PASS  PUT    /courses/7                               -> 200 (очік. 200)  {"code": "OPS-210", "title": "Основи DevOps і CI/CD", "description": null}
+A07   PASS  POST   /courses                                 -> 409 (очік. 409)  unique_violation: повторювані значення ключа порушують обмеження унікальності "courses_code_key"
+A08   PASS  POST   /courses                                 -> 422 (очік. 422)  check_violation: новий рядок для відношення "courses" порушує перевірне обмеження перевірку "courses_dates_chk"
+A09   PASS  POST   /courses                                 -> 422 (очік. 422)  check_violation: Користувач 6 не є викладачем
+A10   PASS  POST   /courses                                 -> 422 (очік. 422)  {"detail": [{"type": "string_pattern_mismatch", "loc": ["body", "code"], "msg": "String should match pattern '^[A-Z]{2,6}-[0-9]{3}$'", "input": "bad", "ctx": {"pattern": "^[A-Z]{2,6}-[0-9]{3}$"}}]}
+A11   PASS  POST   /modules                                 -> 201 (очік. 201)  {"course_id": 7, "title": "Контейнери", "position": 1}
+A12   PASS  POST   /materials                               -> 201 (очік. 201)  {"module_id": 12, "title": "Docker docs", "material_type": "link"}
+A13   PASS  POST   /assignments                             -> 201 (очік. 201)  {"module_id": 12, "title": "Dockerfile", "description": null}
+A14   PASS  POST   /enrollments                             -> 201 (очік. 201)  {"course_id": 7, "student_id": 16, "id": 35}
+A15   PASS  POST   /enrollments                             -> 409 (очік. 409)  unique_violation: повторювані значення ключа порушують обмеження унікальності "enrollments_course_student_uq"
+A16   PASS  POST   /enrollments                             -> 201 (очік. 201)  {"course_id": 7, "student_id": 17, "id": 37}
+A17   PASS  POST   /enrollments                             -> 422 (очік. 422)  check_violation: На курсі 7 немає вільних місць (2 з 2)
+A18   PASS  POST   /submissions                             -> 201 (очік. 201)  {"id": 59, "assignment_id": 11, "enrollment_id": 35}
+A19   PASS  POST   /submissions                             -> 422 (очік. 422)  check_violation: Завдання 1 не належить курсу запису 35
+A20   PASS  POST   /grades                                  -> 422 (очік. 422)  check_violation: Бал 11.00 перевищує максимальний 10.00
+A21   PASS  POST   /grades                                  -> 201 (очік. 201)  {"submission_id": 59, "grader_id": 4, "score": "9.00"}
+A22   PASS  GET    /submissions/59                          -> 200 (очік. 200)  {"id": 59, "assignment_id": 11, "enrollment_id": 35}
+A23   PASS  POST   /material-progress                       -> 201 (очік. 201)  {"enrollment_id": 35, "material_id": 23, "first_viewed_at": "2026-11-22T18:08:22.485290+02:00"}
+A24   PASS  POST   /material-progress                       -> 201 (очік. 201)  {"enrollment_id": 35, "material_id": 23, "first_viewed_at": "2026-11-22T18:08:22.485290+02:00"}
+A25   PASS  GET    /enrollments/35/progress                 -> 200 (очік. 200)  {"enrollment_id": 35, "course_id": 7, "student_id": 16}
+A26   PASS  GET    /courses/7/report                        -> 200 (очік. 200)  2 записів
+A27   PASS  GET    /courses/7/structure                     -> 200 (очік. 200)  {"id": 7, "code": "OPS-210", "title": "Основи DevOps і CI/CD"}
+A28   PASS  POST   /enrollments/35/complete                 -> 200 (очік. 200)  {"course_id": 7, "student_id": 16, "id": 35}
+A29   PASS  DELETE /courses/7                               -> 409 (очік. 409)  restrict_violation: оновлення або видалення в таблиці "courses" порушує налаштування RESTRICT зовнішнього ключа "enrollments_course_id_fkey" в таблиці "enrollments"
+A30   PASS  GET    /reports/audit-log?table_name=grades&limit=3 -> 200 (очік. 200)  3 записів
+A31   PASS  GET    /reports/course-overview?status=published -> 200 (очік. 200)  5 записів
+A32   PASS  GET    /reports/course-stats?refresh=true       -> 200 (очік. 200)  7 записів
+A33   PASS  GET    /reports/top-students?course_id=1&limit=3 -> 200 (очік. 200)  3 записів
+A34   PASS  GET    /categories/tree                         -> 200 (очік. 200)  8 записів
+A35   PASS  GET    /courses/9999                            -> 404 (очік. 404)  course 9999 не знайдено
+A36   PASS  GET    /courses/9999/report                     -> 404 (очік. 404)  no_data_found: Курс 9999 не знайдено
+A37   PASS  DELETE /grades/53                               -> 204 (очік. 204)  
+A38   PASS  DELETE /submissions/59                          -> 204 (очік. 204)  
+A39   PASS  DELETE /material-progress/35/23                 -> 204 (очік. 204)  
+A40   PASS  DELETE /enrollments/35                          -> 204 (очік. 204)  
+A41   PASS  DELETE /assignments/11                          -> 204 (очік. 204)  
+A42   PASS  DELETE /courses/7                               -> 204 (очік. 204)  
+A43   PASS  GET    /courses/7                               -> 404 (очік. 404)  course 7 не знайдено
+
+Разом: 43 PASS, 0 FAIL
